@@ -79,3 +79,9 @@ GitHub Pages will rebuild the live site. Check the repository’s Actions tab fo
 For mobile testing, open the live preview in your phone’s browser. The Mac and local preview server do not need to be running. Localhost, the hosted site, and each device keep separate browser data; your existing local entries do not transfer automatically. The website and source are public, but browser-local reflections are not uploaded.
 
 To move to private source later, deploy to a separate host first, then change repository visibility. On GitHub Free, making this repository private unpublishes its Pages site. Existing public copies or forks can remain public.
+
+## Navigation and future resources
+
+On phones, Home, Brothers, Meetings, and Commitments sit in a sticky tab row below the brand header. On desktop, they remain in the sidebar.
+
+A future Resources section could collect Andrew Horn readings, retreat recommendations, and practical life-hacks shared by the men. It is not implemented yet; meeting-specific recommendations can already be linked in the meeting details.
