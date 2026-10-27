@@ -22,6 +22,12 @@ assert.equal(JSON.parse(stored).reflections[0].buffalo,'Saw a fox');
 submit('reflection-form',{date:'2026-10-26',high:'Updated',low:'Hard day',buffalo:''},{id:'new-id'});
 assert.equal(read('state.reflections.length'),1);
 assert.equal(read('state.reflections[0].high'),'Updated');
+assert.equal(read('state.reflections[0].memberId'),'james');
+assert(read('profileReflection("james")').includes('Updated'));
+assert(!read('profileReflection("alex")').includes('Updated'));
+read('state.reflections.push({id:"older",memberId:"james",date:"2026-10-20",high:"Older reflection",low:"",buffalo:"",updatedAt:"2026-10-28T00:00:00Z"})');
+assert(!read('profileReflection("james")').includes('Older reflection'));
+read('state.reflections.pop()');
 submit('meeting-links-form',{folder:'https://drive.google.com/drive/folders/example',recording:'',notes:''},{id:'m1'});
 assert.match(JSON.parse(stored).meetingLinks.m1.folder,/drive.google.com/);
 submit('resource-form',{title:'Helpful reading',url:'javascript:alert(1)',kind:'Reading'},{id:'m1'});
@@ -40,6 +46,12 @@ assert(read('commitRow({...state.commitments[0],target:1,progress:1})').includes
 const reloaded={...ctx,document:{...ctx.document,addEventListener(){}},window:{addEventListener(){}}};
 vm.createContext(reloaded);vm.runInContext(fs.readFileSync('features.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('app.js','utf8'),reloaded);
 assert.equal(vm.runInContext('state.reflections[0].high',reloaded),'Updated');
+assert(vm.runInContext('profileReflection("james").includes("Updated")',reloaded));
+// Legacy reflections without a member ID are assigned to the current sample member.
+const legacy=JSON.parse(stored);delete legacy.reflections[0].memberId;stored=JSON.stringify(legacy);
+const migrated={...ctx,document:{...ctx.document,addEventListener(){}},window:{addEventListener(){}}};
+vm.createContext(migrated);vm.runInContext(fs.readFileSync('features.js','utf8'),migrated);vm.runInContext(fs.readFileSync('app.js','utf8'),migrated);
+assert.equal(vm.runInContext('state.reflections[0].memberId',migrated),'james');
 assert.equal(vm.runInContext('meetingLinks("m1").resources[0].title',reloaded),'Updated reading');
 assert.equal(vm.runInContext('state.commitments[0].progress',reloaded),2);
 console.log('Passed: existing data migration; reflection create/edit/reload; meeting links and resource create/edit/reload; unsafe URL rejection; binary/counted controls.');

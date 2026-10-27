@@ -22,7 +22,7 @@ To try the mobile layout in Chrome, open View → Developer → Developer Tools,
 
 ## Try it
 
-- **Home:** add a dated high/low/buffalo reflection (fill any one field or all three), revisit and edit previous entries, edit your personal focus and adjust counted commitments with − / +, or check off binary commitments. Open the upcoming gathering to see its agenda.
+- **Home:** add a dated high/low/buffalo reflection (fill any one field or all three), revisit and edit previous entries (your latest dated reflection also appears on James Miller’s profile), edit your personal focus and adjust counted commitments with − / +, or check off binary commitments. Open the upcoming gathering to see its agenda.
 - **Brothers:** open any of the six fictional illustrated profiles to read their current chapter, growth theme, and ways to support them.
 - **Meetings:** search by title, topic, summary, or takeaway; filter by topic; open a conversation for its summary, themes, takeaways, and reflection question. Add/edit Google folder, recording, and notes/transcript links. Add/edit tools, videos, readings, or other resource links, including who suggested them and why they helped.
 - **Commitments:** add or edit a promise, choose a partner, set a target, record progress, filter by status, or remove a commitment. Removal asks for confirmation. Counted goals use bounded − / + controls; one-time tasks use a checkbox. Completed counted goals stay at their target until you deliberately decrease or edit them.
@@ -85,3 +85,5 @@ To move to private source later, deploy to a separate host first, then change re
 On phones, Home, Brothers, Meetings, and Commitments sit in a sticky tab row below the brand header. On desktop, they remain in the sidebar.
 
 A future Resources section could collect Andrew Horn readings, retreat recommendations, and practical life-hacks shared by the men. It is not implemented yet; meeting-specific recommendations can already be linked in the meeting details.
+
+The current sample member is James Miller (`currentMemberId` in `app.js`). Reflections are linked to their member ID, and the latest reflection by date appears on that member’s profile. Existing unassigned reflections are preserved as James’s. Other members show an empty state until they have a reflection. Switching members and sharing updates across browsers require future account and storage work.
