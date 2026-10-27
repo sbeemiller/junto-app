@@ -46,7 +46,7 @@ To deliberately reset sample data: open your browser's developer console on the 
 
 All people, portraits, meetings, and commitments are fictional. The upcoming gathering is a fixed sample dated October 29, 2026; there is no real meeting link. Profiles and meeting summaries are read-only sample content. Meeting links and resources are editable. Google files are opened via links; this app does not connect to Google or change file permissions. Uploads and shared reflections are not implemented. No external fonts, images, AI services, authentication, analytics, or database are used.
 
-## Local Git version history
+## Git version history and publishing
 
 Git tracks changes to the application files. It does not back up browser-local entries or link this project to GitHub automatically.
 
@@ -64,4 +64,18 @@ git add index.html styles.css app.js features.js README.md
 git commit -m "Describe what changed"
 ```
 
-The initial checkpoint includes the supplied design reference. `.gitignore` excludes common local clutter and environment files. No GitHub remote or publishing is configured. Choose an account and repository name when ready to publish.
+The initial checkpoint includes the supplied design reference. `.gitignore` excludes common local clutter and environment files. The public repository is https://github.com/sbeemiller/junto-app.
+The live preview is https://sbeemiller.github.io/junto-app/.
+GitHub Pages publishes from `main` at the repository root. `.nojekyll` serves these plain files without Jekyll processing.
+
+After committing an update, run:
+
+```sh
+git push
+```
+
+GitHub Pages will rebuild the live site. Check the repository’s Actions tab for deployment status, then refresh the preview.
+
+For mobile testing, open the live preview in your phone’s browser. The Mac and local preview server do not need to be running. Localhost, the hosted site, and each device keep separate browser data; your existing local entries do not transfer automatically. The website and source are public, but browser-local reflections are not uploaded.
+
+To move to private source later, deploy to a separate host first, then change repository visibility. On GitHub Free, making this repository private unpublishes its Pages site. Existing public copies or forks can remain public.
