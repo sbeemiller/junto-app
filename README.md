@@ -87,3 +87,7 @@ On phones, Home, Brothers, Meetings, and Commitments sit in a sticky tab row bel
 A future Resources section could collect Andrew Horn readings, retreat recommendations, and practical life-hacks shared by the men. It is not implemented yet; meeting-specific recommendations can already be linked in the meeting details.
 
 The current sample member is James Miller (`currentMemberId` in `app.js`). Reflections are linked to their member ID, and the latest reflection by date appears on that member’s profile. Existing unassigned reflections are preserved as James’s. Other members show an empty state until they have a reflection. Switching members and sharing updates across browsers require future account and storage work.
+
+## Shared storage planning
+
+See [the data and permissions plan](Planning/data-and-permissions-plan.md) for the proposed restricted Google Sheet, Drive artifacts, rotating leader workflow, and reviewed WhatsApp sharing. This is a plan; the live prototype still uses browser-local storage.
