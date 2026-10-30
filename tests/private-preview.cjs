@@ -2,8 +2,7 @@ const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/st
 const path=require('node:path'); const preview=path.join(__dirname,'..','private-preview'); const code=fs.readFileSync(path.join(preview,'Code.gs'),'utf8');
 let email='',readCount=0;
 const records={Members:[['member_id','display_name','active','role'],['owner-id','Owner','TRUE','owner']],Meetings:[['meeting_id','meeting_date'],['m1','10/28/26']]};
-const sheet={getSheetByName(name){return {getDataRange(){return {getDisplayValues(){return structuredClone(records[name]||[['record_id']]);}}}}},getUrl(){return 'https://docs.google.com/spreadsheets/d/test/edit'}};
-const ctx={Session:{getActiveUser(){return {getEmail(){return email}}}},JUNTO_CONFIG:{ownerEmail:'owner@example.test',spreadsheetId:'test'},SpreadsheetApp:{openById(){readCount++;return sheet;}},Date};
+const ctx={Session:{getActiveUser(){return {getEmail(){return email}}}},JUNTO_CONFIG:{ownerEmail:'owner@example.test',spreadsheetId:'test'},Sheets:{Spreadsheets:{Values:{batchGet(id,options){readCount++;assert.equal(id,'test');assert.equal(options.valueRenderOption,'FORMATTED_VALUE');return {valueRanges:options.ranges.map(range=>({values:structuredClone(records[range.split("'")[1]]||[['record_id']])}))};}}}},Date};
 vm.createContext(ctx);vm.runInContext(code,ctx);
 assert.throws(()=>vm.runInContext('getSnapshot()',ctx),/only to its owner/);assert.equal(readCount,0);
 email='stranger@example.test';assert.throws(()=>vm.runInContext('getSnapshot()',ctx),/only to its owner/);assert.equal(readCount,0);

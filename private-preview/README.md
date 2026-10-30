@@ -6,7 +6,7 @@ Read-only Apps Script proof of concept. Separate from the public GitHub Pages de
 - `requireOwner_` also checks the server-observed Google account before reading data.
 - A private deployment file named `Config.gs` supplies `JUNTO_CONFIG` with `ownerEmail` and `spreadsheetId`. Keep it outside this public repository.
 - Build `Style.html` from the current app CSS and replace local landscape URLs with a neutral background, so the standalone preview needs no external assets.
-- The server reads the existing Sheet with a read-only scope. There are no save functions.
+- The server reads the existing Sheet through the advanced Sheets API with the existing read-only scope. There are no save functions.
 - Frontend rendering escapes Sheet text and accepts only HTTPS source links.
 - The public demo’s local data is neither imported nor mixed into the Sheet.
 

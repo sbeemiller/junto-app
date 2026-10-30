@@ -17,23 +17,28 @@ function doGet() {
 
 function includeStyle_() { return HtmlService.createHtmlOutputFromFile('Style').getContent(); }
 
-function readRecords_(spreadsheet, name) {
-  const sheet = spreadsheet.getSheetByName(name);
-  if (!sheet) throw new Error('A required records tab is missing.');
-  const rows = sheet.getDataRange().getDisplayValues();
+function recordsFromValues_(values) {
+  const rows = (values || []).map(row => row.slice());
   const headers = rows.shift() || [];
   return rows.filter(row => row[0]).map(row => headers.reduce((record, header, i) => {
-    if (header) record[header] = row[i] || '';
+    if (header) record[header] = row[i] == null ? '' : String(row[i]);
     return record;
   }, {}));
 }
 
 function getSnapshot() {
   const config = requireOwner_(); // Authenticate before accessing any Sheet data.
-  const spreadsheet = SpreadsheetApp.openById(config.spreadsheetId);
-  const collections = {};
-  ['Members', 'Meetings', 'Reflections', 'Commitments', 'ProgressLog', 'Resources', 'Leadership'].forEach(name => {
-    collections[name] = readRecords_(spreadsheet, name);
+  const names = ['Members', 'Meetings', 'Reflections', 'Commitments', 'ProgressLog', 'Resources', 'Leadership'];
+  // The Sheets API supports the existing read-only scope. SpreadsheetApp.openById
+  // requires the broader spreadsheets scope, even for a read-only operation.
+  const result = Sheets.Spreadsheets.Values.batchGet(config.spreadsheetId, {
+    ranges: names.map(name => "'" + name + "'!A1:R1000"),
+    valueRenderOption: 'FORMATTED_VALUE'
   });
-  return { collections: collections, loadedAt: new Date().toISOString(), sheetUrl: spreadsheet.getUrl() };
+  const ranges = result.valueRanges || [];
+  if (ranges.length !== names.length) throw new Error('Not all required records tabs could be read.');
+  const collections = {};
+  names.forEach((name, i) => { collections[name] = recordsFromValues_(ranges[i].values); });
+  return { collections: collections, loadedAt: new Date().toISOString(),
+    sheetUrl: 'https://docs.google.com/spreadsheets/d/' + config.spreadsheetId + '/edit' };
 }
