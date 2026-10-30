@@ -32,7 +32,7 @@ function getSnapshot() {
   // The Sheets API supports the existing read-only scope. SpreadsheetApp.openById
   // requires the broader spreadsheets scope, even for a read-only operation.
   const result = Sheets.Spreadsheets.Values.batchGet(config.spreadsheetId, {
-    ranges: names.map(name => "'" + name + "'!A1:R1000"),
+    ranges: names.map(name => "'" + name + "'!A1:W1000"),
     valueRenderOption: 'FORMATTED_VALUE'
   });
   const ranges = result.valueRanges || [];

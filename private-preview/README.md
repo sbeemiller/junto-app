@@ -15,3 +15,9 @@ Member access and edits are not implemented in this owner-only test. Do not chan
 Build with `node private-preview/build.mjs /absolute/tmp/output` after supplying `JUNTO_OWNER_EMAIL` and `JUNTO_SHEET_ID` in the ignored `.env.local`. Local script/deployment IDs are recorded there too. No new dependencies are required.
 
 Run the authorization checks with `node tests/private-preview.cjs`. Google authorization and a successful live Sheet read must still be verified before calling the preview connected.
+
+## Imported meeting metadata
+
+The Meetings tab can supply summary, themes, takeaways, suggested reflection questions, transcript links, next steps, source document ID, document revision, and import time. Imported Gemini content remains pending leader review. Suggested next steps are displayed separately from confirmed commitments. Transcript text stays in Google Docs.
+
+The current preview uses the same read-only Sheet access; it does not directly read original documents or run scheduled imports. See `Planning/google-access.md` for the proposed separate importer and required permissions. Test the card rendering with `node tests/private-preview-cards.cjs`.

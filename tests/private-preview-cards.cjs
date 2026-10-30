@@ -1,0 +1,16 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(path.join(__dirname,'..','private-preview','Index.html'),'utf8');
+const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const view={innerHTML:''};let success;
+const data={collections:{Members:[],Meetings:[{meeting_id:'m1',meeting_date:'10/28/26',title:'Test meeting',summary:'<script>alert(1)</script>',themes:'Community\nPresence',takeaways:'Listen carefully\nMake time',next_steps:'A suggested action',source_doc_id:'test-doc',source_review:'Review pending',notes_links:'https://docs.google.com/document/d/test/edit',transcript_links:'https://docs.google.com/document/d/test/edit?tab=transcript',carry_forward_question:'What will I practice?',imported_at:'2026-10-30T12:00:00Z'}],Reflections:[],Commitments:[],Resources:[],Leadership:[],ProgressLog:[]},sheetUrl:'https://docs.google.com/spreadsheets/d/test/edit'};
+const runner={withSuccessHandler(fn){success=fn;return this;},withFailureHandler(){return this;},getSnapshot(){success(data);}};
+const context={document:{getElementById(){return view;},querySelectorAll(){return [];},addEventListener(){}},google:{script:{run:runner}},window:{scrollTo(){}},URL,Date};
+vm.createContext(context);vm.runInContext(script,context);vm.runInContext("section='Meetings';render()",context);
+assert(view.innerHTML.includes('Imported Gemini notes'));assert(view.innerHTML.includes('Transcript'));
+assert(view.innerHTML.includes('Suggested next steps from the notes'));assert(view.innerHTML.includes('not automatically assigned commitments'));
+assert(view.innerHTML.includes('Suggested reflection prompt, not a recorded decision.'));
+assert(view.innerHTML.includes('&lt;script&gt;'));assert(!view.innerHTML.includes('<script>alert'));
+assert.equal(vm.runInContext("safeURL('javascript:alert(1)')",context),'');
+vm.runInContext("query='carefully'",context);assert(vm.runInContext('meetingResults()',context).includes('Test meeting'));
+vm.runInContext("query='not present'",context);assert(vm.runInContext('meetingResults()',context).includes('No matching meetings'));
+console.log('Passed: imported card fields, transcript links, explicit draft labels, source/commitment separation, HTML escaping, URL filtering, and takeaway search.');
