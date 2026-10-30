@@ -1,0 +1,12 @@
+const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+const path=require('node:path'); const preview=path.join(__dirname,'..','private-preview'); const code=fs.readFileSync(path.join(preview,'Code.gs'),'utf8');
+let email='',readCount=0;
+const records={Members:[['member_id','display_name','active','role'],['owner-id','Owner','TRUE','owner']],Meetings:[['meeting_id','meeting_date'],['m1','10/28/26']]};
+const sheet={getSheetByName(name){return {getDataRange(){return {getDisplayValues(){return structuredClone(records[name]||[['record_id']]);}}}}},getUrl(){return 'https://docs.google.com/spreadsheets/d/test/edit'}};
+const ctx={Session:{getActiveUser(){return {getEmail(){return email}}}},JUNTO_CONFIG:{ownerEmail:'owner@example.test',spreadsheetId:'test'},SpreadsheetApp:{openById(){readCount++;return sheet;}},Date};
+vm.createContext(ctx);vm.runInContext(code,ctx);
+assert.throws(()=>vm.runInContext('getSnapshot()',ctx),/only to its owner/);assert.equal(readCount,0);
+email='stranger@example.test';assert.throws(()=>vm.runInContext('getSnapshot()',ctx),/only to its owner/);assert.equal(readCount,0);
+email='OWNER@example.test';const snapshot=vm.runInContext('getSnapshot()',ctx);assert.equal(readCount,1);assert.equal(snapshot.collections.Members[0].display_name,'Owner');assert.equal(snapshot.collections.Meetings[0].meeting_date,'10/28/26');assert.doesNotThrow(()=>JSON.stringify(snapshot));
+const manifest=JSON.parse(fs.readFileSync(path.join(preview,'appsscript.json'),'utf8'));assert.equal(manifest.webapp.access,'MYSELF');assert(manifest.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets.readonly'));
+console.log('Passed: blank and other accounts rejected before data access; owner reads structured records; deployment is owner-only and read-only.');
