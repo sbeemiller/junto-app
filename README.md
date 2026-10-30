@@ -1,6 +1,6 @@
 # Junto
 
-A mobile-first, fictional brotherhood prototype built with plain HTML, CSS, and JavaScript. No installation, build step, dependencies, accounts, or API keys needed.
+A mobile-first Junto landing page and a separate private member preview. The original fictional prototype is preserved in `demo.html`. No installation, build step, dependencies, accounts, or API keys needed.
 
 ## Preview in VS Code
 
@@ -12,7 +12,7 @@ A mobile-first, fictional brotherhood prototype built with plain HTML, CSS, and 
    python3 serve.py
    ```
 
-4. Open **http://localhost:8000** in your browser.
+4. Open **http://localhost:8000** for the landing page, or **http://localhost:8000/demo.html** for the fictional prototype.
 5. Leave the terminal running while you use the app. After editing a file, save it and refresh the browser to see the change.
 6. To stop the server, click in that terminal and press **Control+C**.
 
@@ -91,3 +91,9 @@ The current sample member is James Miller (`currentMemberId` in `app.js`). Refle
 ## Shared storage planning
 
 See [the data and permissions plan](Planning/data-and-permissions-plan.md) for the proposed restricted Google Sheet, Drive artifacts, rotating leader workflow, and reviewed WhatsApp sharing. This is a plan; the live prototype still uses browser-local storage.
+
+## Public entry and private member area
+
+The public root now serves a welcome page with a Member sign-in link to the Google-hosted private app. No real meeting content, member names, email roster, or Sheet data is bundled into that page. The destination currently admits the administrator only. Member invitations and access enforcement for the confirmed roster remain pending.
+
+`index.html` and `landing.css` own the public welcome page. `demo.html`, `styles.css`, `app.js`, and `features.js` preserve the fictional prototype. The public landing page does not run the demo's JavaScript or read its browser-local data. `private-preview/` contains the generic Apps Script source. Real configuration stays in ignored `.env.local` and build files outside this repository.
